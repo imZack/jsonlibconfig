@@ -1,0 +1,72 @@
+{
+  "hours": {
+    "mon": {
+      "close": 18,
+      "open": 9
+    },
+    "wed": {
+      "close": 18,
+      "open": 9
+    },
+    "sun": {
+      "close": 16,
+      "open": 11
+    },
+    "fri": {
+      "close": 20,
+      "open": 9
+    },
+    "sat": {
+      "close": 20,
+      "open": 9
+    },
+    "thu": {
+      "close": 18,
+      "open": 9
+    },
+    "tue": {
+      "close": 18,
+      "open": 9
+    }
+  },
+  "name": "Books, Movies & More",
+  "inventory": {
+    "movies": [
+      {
+        "media": "DVD",
+        "price": 19.99,
+        "qty": 11,
+        "title": "Brazil"
+      },
+      {
+        "media": "DVD",
+        "price": 18.99,
+        "qty": 5,
+        "title": "The City of Lost Children"
+      },
+      {
+        "media": "Blu-Ray",
+        "price": 24.99,
+        "qty": 20,
+        "title": "Memento"
+      },
+      {
+        "title": "Howard the Duck"
+      }
+    ],
+    "books": [
+      {
+        "price": 29.99,
+        "author": "Robert Louis Stevenson",
+        "qty": 5,
+        "title": "Treasure Island"
+      },
+      {
+        "price": 9.99,
+        "author": "Neal Stephenson",
+        "qty": 8,
+        "title": "Snow Crash"
+      }
+    ]
+  }
+}
