@@ -7,13 +7,14 @@ def read(*paths):
     with open(os.path.join(*paths), "r") as f:
         return f.read()
 
+
 setup(
     name="jsonlibconfig",
-    version="0.0.1",
+    version="0.1.0",
     description=":sparkles: Pure python implementation library" +
     " provides JSON <- convert -> Libconfig",
     long_description=read("README.md"),
-    url="https://github.com/imZack/json-libconfig",
+    url="https://github.com/imZack/jsonlibconfig",
     author="YuLun Shih",
     author_email="shih@yulun.me",
     license="MIT",

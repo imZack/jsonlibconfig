@@ -47,8 +47,8 @@ if args.pretty is True:
     indent = 2
 
 if args.target == "libconfig":
-    print (encoder.dumps(json.loads(inputs), indent=indent))
+    print(encoder.dumps(json.loads(inputs), indent=indent))
 elif args.target == "json":
-    print json.dumps(
+    print(json.dumps(
         decoder.loads(
-            inputs, _hextoint=args.hextoint), indent=indent)
+            inputs, _hextoint=args.hextoint), indent=indent))

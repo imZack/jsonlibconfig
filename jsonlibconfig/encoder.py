@@ -1,11 +1,14 @@
 from json.encoder import (JSONEncoder,
-                          encode_basestring_ascii, FLOAT_REPR, INFINITY,
+                          encode_basestring_ascii, INFINITY,
                           encode_basestring)
 import json
 import re
-fix_key = re.compile(ur'"([A-Za-z\*][-A-Za-z0-9_\*]*)"=')
-fix_hex = re.compile(ur'"(0[Xx][0-9A-Fa-f]+)"')
-fix_hex64 = re.compile(ur'"(0[Xx][0-9A-Fa-f]+(L(L)?)?)"')
+import six
+fix_key = re.compile(r'"([A-Za-z\\*][-A-Za-z0-9_\\*]*)"=')
+fix_hex = re.compile(r'"(0[Xx][0-9A-Fa-f]+)"')
+fix_hex64 = re.compile(r'"(0[Xx][0-9A-Fa-f]+(L(L)?)?)"')
+
+FLOAT_REPR = float.__repr__
 
 
 # borrow from https://github.com/python/cpython/blob/2.7/Lib/json/encoder.py
@@ -37,7 +40,9 @@ class LibconfigEncoder(JSONEncoder):
     item_separator = '; '
     key_separator = '= '
     list_separator = ', '
-    def __init__(self, skipkeys=False, ensure_ascii=True,
+
+    def __init__(
+            self, skipkeys=False, ensure_ascii=True,
             check_circular=True, allow_nan=True, sort_keys=False,
             indent=None, separators=None, encoding='utf-8', default=None):
         """Constructor for JSONEncoder, with sensible defaults.
@@ -45,7 +50,7 @@ class LibconfigEncoder(JSONEncoder):
         encoding of keys that are not str, int, long, float or None.  If
         skipkeys is True, such items are simply skipped.
         If *ensure_ascii* is true (the default), all non-ASCII
-        characters in the output are escaped with \uXXXX sequences,
+        characters in the output are escaped with \\uXXXX sequences,
         and the results are str instances consisting of ASCII
         characters only.  If ensure_ascii is False, a result may be a
         unicode instance.  This usually happens if the input contains
@@ -86,7 +91,7 @@ class LibconfigEncoder(JSONEncoder):
         self.sort_keys = sort_keys
         self.indent = indent
         if separators is not None:
-            self.list_separator, self.item_separator, self.key_separator = separators
+            self.list_separator, self.item_separator, self.key_separator = separators  # noqa: E501
         if default is not None:
             self.default = default
         self.encoding = encoding
@@ -115,7 +120,7 @@ class LibconfigEncoder(JSONEncoder):
         '{"foo": ["bar", "baz"]}'
         """
         # This is for extremely simple cases and benchmarks.
-        if isinstance(o, basestring):
+        if isinstance(o, six.string_types):
             if isinstance(o, str):
                 _encoding = self.encoding
                 if (_encoding is not None
@@ -159,7 +164,8 @@ class LibconfigEncoder(JSONEncoder):
                     o = o.decode(_encoding)
                 return _orig_encoder(o)
 
-        def floatstr(o, allow_nan=self.allow_nan,
+        def floatstr(
+                o, allow_nan=self.allow_nan,
                 _repr=FLOAT_REPR, _inf=INFINITY, _neginf=-INFINITY):
             # Check for specials.  Note that this type of test is processor
             # and/or platform-specific, so do tests which don't depend on the
@@ -190,22 +196,21 @@ class LibconfigEncoder(JSONEncoder):
         return _iterencode(o, 0)
 
 
-def _make_iterencode(markers, _default, _encoder, _indent, _floatstr,
+def _make_iterencode(
+        markers, _default, _encoder, _indent, _floatstr,
         _key_separator, _item_separator, _list_separator, _sort_keys,
         _skipkeys, _one_shot,
-        ## HACK: hand-optimized bytecode; turn globals into locals
+        # HACK: hand-optimized bytecode; turn globals into locals
         ValueError=ValueError,
-        basestring=basestring,
         dict=dict,
         float=float,
         id=id,
         int=int,
         isinstance=isinstance,
         list=list,
-        long=long,
         str=str,
         tuple=tuple,
-    ):
+        ):
 
     def _iterencode_list(lst, _current_indent_level):
         if not lst:
@@ -238,7 +243,7 @@ def _make_iterencode(markers, _default, _encoder, _indent, _floatstr,
                 first = False
             else:
                 buf = separator
-            if isinstance(value, basestring):
+            if isinstance(value, six.string_types):
                 yield buf + _encoder(value)
             elif value is None:
                 yield buf + 'null'
@@ -246,7 +251,7 @@ def _make_iterencode(markers, _default, _encoder, _indent, _floatstr,
                 yield buf + 'true'
             elif value is False:
                 yield buf + 'false'
-            elif isinstance(value, (int, long)):
+            elif isinstance(value, six.integer_types):
                 yield buf + str(value)
             elif isinstance(value, float):
                 yield buf + _floatstr(value)
@@ -289,9 +294,9 @@ def _make_iterencode(markers, _default, _encoder, _indent, _floatstr,
         if _sort_keys:
             items = sorted(dct.items(), key=lambda kv: kv[0])
         else:
-            items = dct.iteritems()
+            items = six.iteritems(dct)
         for key, value in items:
-            if isinstance(key, basestring):
+            if isinstance(key, six.string_types):
                 pass
             # JavaScript is weakly typed for these, so it makes sense to
             # also allow them.  Many encoders seem to do something like this.
@@ -303,7 +308,7 @@ def _make_iterencode(markers, _default, _encoder, _indent, _floatstr,
                 key = 'false'
             elif key is None:
                 key = 'null'
-            elif isinstance(key, (int, long)):
+            elif isinstance(key, six.integer_types):
                 key = str(key)
             elif _skipkeys:
                 continue
@@ -315,7 +320,7 @@ def _make_iterencode(markers, _default, _encoder, _indent, _floatstr,
                 yield item_separator
             yield _encoder(key)
             yield _key_separator
-            if isinstance(value, basestring):
+            if isinstance(value, six.string_types):
                 yield _encoder(value)
             elif value is None:
                 yield 'null'
@@ -323,7 +328,7 @@ def _make_iterencode(markers, _default, _encoder, _indent, _floatstr,
                 yield 'true'
             elif value is False:
                 yield 'false'
-            elif isinstance(value, (int, long)):
+            elif isinstance(value, six.integer_types):
                 yield str(value)
             elif isinstance(value, float):
                 yield _floatstr(value)
@@ -345,7 +350,7 @@ def _make_iterencode(markers, _default, _encoder, _indent, _floatstr,
             del markers[markerid]
 
     def _iterencode(o, _current_indent_level):
-        if isinstance(o, basestring):
+        if isinstance(o, six.string_types):
             yield _encoder(o)
         elif o is None:
             yield 'null'
@@ -353,7 +358,7 @@ def _make_iterencode(markers, _default, _encoder, _indent, _floatstr,
             yield 'true'
         elif o is False:
             yield 'false'
-        elif isinstance(o, (int, long)):
+        elif isinstance(o, six.integer_types):
             yield str(o)
         elif isinstance(o, float):
             yield _floatstr(o)
