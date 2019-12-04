@@ -42,14 +42,14 @@ def t_HEX64(t):
 def t_HEX(t):
     r"0[Xx][0-9A-Fa-f]+"
     if _hextoint:
-        print "to int"
+        print("to int")
         t.value = int(t.value, 0)
-    print "not to int"
+    print("not to int")
     return t
 
 
 def t_FLOAT(t):
-    r"([-+]?([0-9]*)?\.[0-9]*([eE][-+]?[0-9]+)?)|([-+]([0-9]+)(\.[0-9]*)?[eE][-+]?[0-9]+)"
+    r"([-+]?([0-9]*)?\.[0-9]*([eE][-+]?[0-9]+)?)|([-+]([0-9]+)(\.[0-9]*)?[eE][-+]?[0-9]+)"  # noqa: E501
     t.value = float(t.value)
     return t
 
@@ -65,10 +65,12 @@ def t_INTEGER(t):
     t.value = int(t.value)
     return t
 
+
 def t_STRING(t):
     r"\"([^\"\\]|\\.)*\""
     t.value = t.value[1:-1]
     return t
+
 
 t_NAME = r"[A-Za-z\*][-A-Za-z0-9_\*]*"
 t_LBRACE = r"\{"
@@ -101,5 +103,6 @@ def t_error(t):
 def hextoint(b=True):
     global _hextoint
     _hextoint = b
+
 
 lex.lex(debug=0)

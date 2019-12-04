@@ -1,6 +1,7 @@
+from __future__ import absolute_import
+
 import ply.yacc as yacc
-from lex import tokens
-import json
+from jsonlibconfig.lex import tokens  # noqa: F401
 
 
 # configuration = setting-list | empty
@@ -79,8 +80,8 @@ def p_value_list(p):
             p[1].append(p[3])
             p[0] = p[1]
         else:
-            l = [p[1], p[3]]
-            p[0] = l
+            lst = [p[1], p[3]]
+            p[0] = lst
     else:
         p[0] = p[1]
 ###############################################################################
@@ -122,8 +123,8 @@ def p_scalar_value(p):
 
 
 def p_error(p):
-    print p
-    print p.type
+    print(p)
+    print(p.type)
     print("Syntax error in input!")
 
 

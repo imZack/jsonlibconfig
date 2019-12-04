@@ -1,5 +1,7 @@
-from yacc import parser
-from lex import hextoint
+from __future__ import absolute_import
+
+from jsonlibconfig.yacc import parser
+from jsonlibconfig.lex import hextoint
 
 
 def load(f, _hextoint=False):
