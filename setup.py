@@ -14,6 +14,7 @@ setup(
     description=":sparkles: Pure python implementation library" +
     " provides JSON <- convert -> Libconfig",
     long_description=read("README.md"),
+    long_description_content_type="text/markdown",
     url="https://github.com/imZack/jsonlibconfig",
     author="YuLun Shih",
     author_email="shih@yulun.me",
